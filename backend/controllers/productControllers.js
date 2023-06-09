@@ -6,3 +6,11 @@ export const newProduct = async (req, res, next) => {
         product,
     });
 }
+
+export const getProducts = async (req, res, next) => {
+    let products = await Product.find();
+
+    res.status(200).json({
+        products,
+    });
+}
