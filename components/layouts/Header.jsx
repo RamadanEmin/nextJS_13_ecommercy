@@ -5,6 +5,8 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
+import Search from "./Search";
+
 const Header = () => {
 
   return (
@@ -21,7 +23,7 @@ const Header = () => {
               />
             </a>
           </div>
-
+          <Search />
           <div className="flex items-center space-x-2 ml-auto">
             <Link
               href="/cart"
