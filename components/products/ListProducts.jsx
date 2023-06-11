@@ -1,6 +1,7 @@
 "use client";
 
 import Filters from "../layouts/Filters";
+import ProductItem from "./ProductItem";
 
 const ListProducts = ({ data }) => {
   return (
