@@ -2,18 +2,22 @@ import Product from "../models/product";
 import APIFilters from "../utils/APIFilters";
 
 export const newProduct = async (req, res, next) => {
-    const apiFilters = new APIFilters(Product.find(), req.query).search();
-
-    let products = await apiFilters.query;
+    const product = await Product.create(req.body);
     res.status(201).json({
-        products,
+        product,
     });
 }
 
 export const getProducts = async (req, res, next) => {
-    let products = await Product.find();
+    const apiFilters = new APIFilters(Product.find(), req.query).search().filter();
 
+    let products = await apiFilters.query;
+    const filteredProductsCount = products.length;
+
+    products = await apiFilters.query.clone();
     res.status(200).json({
+
+        filteredProductsCount,
         products,
     });
 }
