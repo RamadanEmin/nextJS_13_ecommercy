@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import StarRatings from "react-star-ratings";
+import BreadCrumbs from "../layouts/BreadCrumbs";
 
 const ProductDetails = ({ product }) => {
     const imgRef = useRef(null);
@@ -12,8 +13,17 @@ const ProductDetails = ({ product }) => {
 
     const inStock = product?.stock >= 1;
 
+    const breadCrumbs = [
+        { name: "Home", url: "/" },
+        {
+            name: `${product?.name?.substring(0, 100)} ...`,
+            url: `/products/${product?._id}`,
+        },
+    ];
+
     return (
         <>
+            <BreadCrumbs breadCrumbs={breadCrumbs} />
             <section className="bg-white py-10">
                 <div className="container max-w-screen-xl mx-auto px-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-5">
