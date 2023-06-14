@@ -9,14 +9,20 @@ export const newProduct = async (req, res, next) => {
 }
 
 export const getProducts = async (req, res, next) => {
+    const resPerPage = 5;
+    const productCount = await Product.countDocuments();
+
     const apiFilters = new APIFilters(Product.find(), req.query).search().filter();
 
     let products = await apiFilters.query;
     const filteredProductsCount = products.length;
 
+    apiFilters.pagination(resPerPage);
+
     products = await apiFilters.query.clone();
     res.status(200).json({
-
+        productCount,
+        resPerPage,
         filteredProductsCount,
         products,
     });
