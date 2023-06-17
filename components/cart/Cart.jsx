@@ -6,7 +6,7 @@ import Link from "next/link";
 import CartContext from "@/context/CartContext";
 
 const Cart = () => {
-    const { addItemToCart, cart } = useContext(CartContext);
+    const { addItemToCart, deleteItemFromCart, cart } = useContext(CartContext);
 
     const increaseQty = (cartItem) => {
         const newQty = cartItem?.quantity + 1;
@@ -25,6 +25,12 @@ const Cart = () => {
 
         addItemToCart(item);
     };
+
+    const amountWithoutTax = cart?.cartItems
+        ?.reduce((acc, item) => acc + item.quantity * item.price, 0)
+        .toFixed(2);
+    const taxAmount = (amountWithoutTax * 0.2).toFixed(2);
+    const totalAmount = (Number(amountWithoutTax) + Number(taxAmount)).toFixed(2);
 
     return (
         <>
@@ -108,7 +114,11 @@ const Cart = () => {
                                                 <div className="flex-auto">
                                                     <div className="float-right">
                                                         <a
-                                                            className="px-4 py-2 inline-block text-red-600 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100 cursor-pointer">
+                                                            className="px-4 py-2 inline-block text-red-600 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100 cursor-pointer"
+                                                            onClick={() =>
+                                                                deleteItemFromCart(cartItem?.product)
+                                                            }
+                                                        >
                                                             Remove
                                                         </a>
                                                     </div>
@@ -125,7 +135,7 @@ const Cart = () => {
                                     <ul className="mb-5">
                                         <li className="flex justify-between text-gray-600  mb-1">
                                             <span>Amount before Tax:</span>
-                                            <span> 200 лв.</span>
+                                            <span> {amountWithoutTax} лв.</span>
                                         </li>
                                         <li className="flex justify-between text-gray-600  mb-1">
                                             <span>Total Units:</span>
@@ -139,11 +149,11 @@ const Cart = () => {
                                         </li>
                                         <li className="flex justify-between text-gray-600  mb-1">
                                             <span>TAX:</span>
-                                            <span>40 лв.</span>
+                                            <span>{taxAmount} лв.</span>
                                         </li>
                                         <li className="text-lg font-bold border-t flex justify-between mt-3 pt-3">
                                             <span>Total price:</span>
-                                            <span>240 лв.</span>
+                                            <span>{totalAmount} лв.</span>
                                         </li>
                                     </ul>
 
