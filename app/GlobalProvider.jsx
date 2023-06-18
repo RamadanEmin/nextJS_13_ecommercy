@@ -1,17 +1,16 @@
-import Header from '@/components/layouts/Header'
-import './globals.css'
-import { GlobalProvider } from './GlobalProvider'
+"use client";
 
-export default function RootLayout({ children }) {
+import { AuthProvider } from "@/context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
+
+export function GlobalProvider({ children }) {
     return (
-        <html lang="en">
-            <head />
-            <body>
-                <GlobalProvider>
-                    <Header />
+        <>
+            <AuthProvider>
+                <CartProvider>
                     {children}
-                </GlobalProvider>
-            </body>
-        </html>
-    )
+                </CartProvider>
+            </AuthProvider>
+        </>
+    );
 }
