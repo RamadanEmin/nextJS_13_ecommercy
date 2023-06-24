@@ -17,7 +17,7 @@ const Login = () => {
         const data = await signIn("credentials", {
             email,
             password,
-            redirect: false,
+            redirect: false
         });
 
         if (data?.error) {
@@ -25,6 +25,7 @@ const Login = () => {
         }
 
         if (data?.ok) {
+            toast.success("Login Successfuly");
             router.push("/");
         }
     };
@@ -74,7 +75,7 @@ const Login = () => {
 
                 <p className="text-center mt-5">
                     Don't have an account?{" "}
-                    <Link href="/register" className="text-blue-500">
+                    <Link href="/register" className="text-blue-500 ml-1">
                         Register
                     </Link>
                 </p>
