@@ -20,22 +20,40 @@ export default async function auth(req, res) {
                     const user = await User.findOne({ email }).select("+password");
 
                     if (!user) {
-                        throw new Error('Invalid Email or Password')
+                        throw new Error('Invalid Email or Password');
                     }
 
                     const isPasswordMatched = await bcrypt.compare(password, user.password);
 
                     if (!isPasswordMatched) {
-                        throw new Error('Invalid Password')
+                        throw new Error('Invalid Password');
                     }
 
                     return user;
                 }
             })
         ],
+        callbacks: {
+            jwt: async ({ token, user }) => {
+                user && (token.user = user);
+
+                if (req.url == `/api/auth/session?update`) {
+                    console.log('updated');
+                    const updatedUser = await User.findById(token.user._id);
+                    token.user = updatedUser;
+                }
+                return token;
+            },
+            session: async ({ session, token }) => {
+                session.user = token.user;
+                delete session?.user?.password;
+
+                return session;
+            }
+        },
         pages: {
             signIn: '/login'
         },
         secret: process.env.NEXTAUTH_SECRET
     });
-}
+}  
