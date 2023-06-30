@@ -1,7 +1,57 @@
+"use client";
+
+import { useContext, useEffect, useState } from "react";
+import { countries } from "countries-list";
+import { toast } from "react-toastify";
+
 import BreadCrumbs from "../layouts/BreadCrumbs";
 import Sidebar from "../layouts/Sidebar";
+import AuthContext from "@/context/AuthContext";
 
-const UpdateAddress = () => {
+const UpdateAddress = ({ id, address }) => {
+    const {
+        error,
+        updated,
+        setUpdated,
+        updateAddress,
+        clearErrors,
+    } = useContext(AuthContext);
+
+    const [street, setStreet] = useState(address.street);
+    const [city, setCity] = useState(address.city);
+    const [state, setState] = useState(address.state);
+    const [zipCode, setZipCode] = useState(address.zipCode);
+    const [phoneNo, setPhoneNo] = useState(address.phoneNo);
+    const [country, setCountry] = useState(address.country);
+
+    useEffect(() => {
+        if (updated) {
+            toast.success("Address Updated");
+            setUpdated(false);
+        }
+
+        if (error) {
+            toast.error(error);
+            clearErrors();
+        }
+    }, [error, updated]);
+
+    const countriesList = Object.values(countries);
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+
+        const newAddress = {
+            street,
+            city,
+            state,
+            zipCode,
+            phoneNo,
+            country,
+        };
+
+        updateAddress(id, newAddress);
+    };
 
     return (
         <>
@@ -15,7 +65,7 @@ const UpdateAddress = () => {
                                 style={{ maxWidth: "480px" }}
                                 className="mt-1 mb-20 p-4 md:p-7 mx-auto rounded bg-white shadow-lg"
                             >
-                                <form>
+                                <form onSubmit={submitHandler}>
                                     <h2 className="mb-5 text-2xl font-semibold">
                                         Update Address
                                     </h2>
@@ -26,6 +76,8 @@ const UpdateAddress = () => {
                                             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                             type="text"
                                             placeholder="Type your address"
+                                            value={street}
+                                            onChange={(e) => setStreet(e.target.value)}
                                         />
                                     </div>
 
@@ -36,6 +88,8 @@ const UpdateAddress = () => {
                                                 className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                                 type="text"
                                                 placeholder="Type your city"
+                                                value={city}
+                                                onChange={(e) => setCity(e.target.value)}
                                             />
                                         </div>
 
@@ -45,6 +99,8 @@ const UpdateAddress = () => {
                                                 className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                                 type="text"
                                                 placeholder="Type state here"
+                                                value={state}
+                                                onChange={(e) => setState(e.target.value)}
                                             />
                                         </div>
                                     </div>
@@ -56,6 +112,8 @@ const UpdateAddress = () => {
                                                 className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                                 type="number"
                                                 placeholder="Type zip code here"
+                                                value={zipCode}
+                                                onChange={(e) => setZipCode(e.target.value)}
                                             />
                                         </div>
 
@@ -65,6 +123,8 @@ const UpdateAddress = () => {
                                                 className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                                 type="number"
                                                 placeholder="Type phone no here"
+                                                value={phoneNo}
+                                                onChange={(e) => setPhoneNo(e.target.value)}
                                             />
                                         </div>
                                     </div>
@@ -73,8 +133,14 @@ const UpdateAddress = () => {
                                         <label className="block mb-1"> Country </label>
                                         <select
                                             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
+                                            value={country}
+                                            onChange={(e) => setCountry(e.target.value)}
                                         >
-                                           
+                                            {countriesList.map((country) => (
+                                                <option key={country.name} value={country.name}>
+                                                    {country.name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
 
