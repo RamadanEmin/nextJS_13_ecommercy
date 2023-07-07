@@ -2,8 +2,10 @@
 
 import { useContext, useState } from "react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 import BreadCrumbs from "../layouts/BreadCrumbs";
 import CartContext from "@/context/CartContext";
+import axios from "axios";
 
 const Shipping = ({ addresses }) => {
     const { cart } = useContext(CartContext);
@@ -12,6 +14,25 @@ const Shipping = ({ addresses }) => {
 
     const setShippingAddress = (address) => {
         setShippingInfo(address._id);
+    };
+
+    const checkoutHandler = async () => {
+        if (!shippingInfo) {
+            return toast.error('Please select your shipping address');
+        }
+
+        try {
+            const { data } = await axios.post(`${process.env.API_URL}/api/orders/checkout_session`,
+                {
+                    items: cart?.cartItems,
+                    shippingInfo
+                }
+            );
+            
+            window.location.href = data.url;
+        } catch (error) {
+            console.log(error.response);
+        }
     };
 
     const breadCrumbs = [
@@ -70,7 +91,9 @@ const Shipping = ({ addresses }) => {
                                     >
                                         Back
                                     </Link>
-                                    <a className="px-5 py-2 inline-block text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 cursor-pointer">
+                                    <a className="px-5 py-2 inline-block text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 cursor-pointer"
+                                        onClick={checkoutHandler}
+                                    >
                                         Checkout
                                     </a>
                                 </div>

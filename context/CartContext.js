@@ -1,11 +1,14 @@
 'use client';
 
+import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
+
+    const router = useRouter();
 
     useEffect(() => {
         setCartToState();
@@ -58,12 +61,27 @@ export const CartProvider = ({ children }) => {
         setCartToState();
     };
 
+    const saveOnCheckout = ({ amount, tax, totalAmount }) => {
+        const checkoutInfo = {
+            amount,
+            tax,
+            totalAmount
+        }
+
+        const newCart = { ...cart, checkoutInfo };
+
+        localStorage.setItem("cart", JSON.stringify(newCart));
+        setCartToState();
+        router.push("/shipping");
+    };
+
     return (
         <CartContext.Provider
             value={{
                 cart,
                 addItemToCart,
-                deleteItemFromCart
+                deleteItemFromCart,
+                saveOnCheckout
             }}
         >
             {children}
