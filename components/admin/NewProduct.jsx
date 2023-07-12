@@ -1,6 +1,23 @@
 'use client';
 
+import { useContext, useState } from "react";
+
 const NewProduct = () => {
+    const [product, setProduct] = useState({
+        name: '',
+        description: '',
+        seller: '',
+        price: '',
+        stock: '',
+        category: ''
+    });
+
+    const { name, description, seller, price, stock, category } = product;
+
+    const onChange = (e) => {
+        setProduct({ ...product, [e.target.name]: e.target.value })
+    };
+
     const categories = [
         "Electronics",
         "Cameras",
@@ -11,13 +28,17 @@ const NewProduct = () => {
         "Books"
     ];
 
+    const sumbitHandler = (e) => {
+        e.preventDefault();
+    };
+
     return (
         <section className="container max-w-3xl p-6 mx-auto">
             <h1 className="mb-3 text-xl md:text-3xl font-semibold text-black">
                 Create New Product
             </h1>
 
-            <form>
+            <form onSubmit={sumbitHandler}>
                 <div className="mb-4">
                     <label className="block mb-1"> Name </label>
                     <input
@@ -25,6 +46,8 @@ const NewProduct = () => {
                         className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                         placeholder="Product name"
                         name="name"
+                        value={name}
+                        onChange={onChange}
                         required
                     />
                 </div>
@@ -36,6 +59,8 @@ const NewProduct = () => {
                         className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                         placeholder="Product description"
                         name="description"
+                        value={description}
+                        onChange={onChange}
                         required
                     ></textarea>
                 </div>
@@ -50,6 +75,8 @@ const NewProduct = () => {
                                     className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                     placeholder="0.00"
                                     name="price"
+                                    value={price}
+                                    onChange={onChange}
                                     required
                                 />
                             </div>
@@ -61,6 +88,8 @@ const NewProduct = () => {
                             <select
                                 className="block appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                 name="category"
+                                value={category}
+                                onChange={onChange}
                                 required
                             >
                                 {categories.map((category) => (
@@ -91,6 +120,8 @@ const NewProduct = () => {
                             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                             placeholder="Seller or brand"
                             name="seller"
+                            value={seller}
+                            onChange={onChange}
                             required
                         />
                     </div>
@@ -104,6 +135,8 @@ const NewProduct = () => {
                                     className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                     placeholder="0"
                                     name="stock"
+                                    value={stock}
+                                    onChange={onChange}
                                     required
                                 />
                             </div>
