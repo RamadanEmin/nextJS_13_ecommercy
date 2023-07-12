@@ -34,6 +34,7 @@ const productSchema = new mongoose.Schema({
                 "Accessories",
                 "Headphones",
                 "Sports",
+                "Books",
             ],
             message: "Please select correct category"
         }
@@ -52,6 +53,11 @@ const productSchema = new mongoose.Schema({
     },
     reviews: [
         {
+            user: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+                required: true
+            },
             rating: {
                 type: Number,
                 required: true
@@ -66,10 +72,15 @@ const productSchema = new mongoose.Schema({
             }
         }
     ],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+        ref: 'User'
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
 
-export default mongoose.models.Product || mongoose.model('Product',productSchema);
+export default mongoose.models.Product || mongoose.model('Product', productSchema);
