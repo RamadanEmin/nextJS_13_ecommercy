@@ -1,8 +1,11 @@
 'use client';
 
 import { useContext, useState } from "react";
+import ProductContext from "@/context/ProductContext";
 
 const NewProduct = () => {
+    const { newProduct } = useContext(ProductContext);
+
     const [product, setProduct] = useState({
         name: '',
         description: '',
@@ -30,6 +33,8 @@ const NewProduct = () => {
 
     const sumbitHandler = (e) => {
         e.preventDefault();
+
+        newProduct(product);
     };
 
     return (

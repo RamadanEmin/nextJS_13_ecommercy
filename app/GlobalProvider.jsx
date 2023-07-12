@@ -12,7 +12,9 @@ export function GlobalProvider({ children }) {
             <ToastContainer position="bottom-right" />
             <AuthProvider>
                 <CartProvider>
-                    {children}
+                    <ProductProvider>
+                        <SessionProvider>{children}</SessionProvider>
+                    </ProductProvider>
                 </CartProvider>
             </AuthProvider>
         </>
