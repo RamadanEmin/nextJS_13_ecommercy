@@ -43,3 +43,32 @@ export const getProduct = async (req, res, next) => {
         product,
     });
 }
+
+export const uploadProductImages = async (req, res, next) => {
+    let product = await Product.findById(req.query.id);
+
+    if (!product) {
+        return next(new ErrorHandler("Product not found.", 404));
+    }
+
+    const uploader = async (path) => await uploads(path, "ecommerce/products");
+
+    const urls = [];
+    const files = req.files;
+
+    for (let file of files) {
+        const { path } = file;
+        const imgUrl = await uploader(path);
+        urls.push(imgUrl);
+        fs.unlinkSync(path);
+    }
+
+    product = await Product.findByIdAndUpdate(req.query.id, {
+        images: urls
+    });
+
+    res.status(200).json({
+        data: urls,
+        product
+    });
+};
