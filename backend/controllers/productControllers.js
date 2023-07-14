@@ -72,3 +72,17 @@ export const uploadProductImages = async (req, res, next) => {
         product
     });
 };
+
+export const updateProduct = async (req, res, next) => {
+    let product = await Product.findById(req.query.id);
+
+    if (!product) {
+        return next(new ErrorHandler("Product not found.", 404));
+    }
+
+    product = await Product.findByIdAndUpdate(req.query.id, req.body);
+
+    res.status(200).json({
+        product
+    });
+};
