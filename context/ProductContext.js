@@ -27,6 +27,21 @@ export const ProductProvider = ({ children }) => {
         }
     };
 
+    const updateProduct = async (product, id) => {
+        try {
+            const { data } = await axios.put(`${process.env.API_URL}/api/admin/products/${id}`,
+                product
+            );
+
+            if (data) {
+                setUpdated(true);
+                router.replace(`/admin/products/${id}`);
+            }
+        } catch (error) {
+            setError(error?.response?.data?.message);
+        }
+    };
+
     const uploadProductImages = async (formData, id) => {
         try {
             setLoading(true);
@@ -61,6 +76,7 @@ export const ProductProvider = ({ children }) => {
                 updated,
                 setUpdated,
                 newProduct,
+                updateProduct,
                 uploadProductImages,
                 clearErrors
             }}
