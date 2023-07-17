@@ -1,4 +1,39 @@
-const UpdateProduct = () => {
+'use client';
+
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import ProductContext from "@/context/ProductContext";
+
+const UpdateProduct = ({ data }) => {
+    const { updateProduct, error, updated, setUpdated, clearErrors } = useContext(ProductContext);
+    const [product, setProduct] = useState({
+        name: data?.name,
+        description: data?.description,
+        seller: data?.seller,
+        price: data?.price,
+        stock: data?.stock,
+        category: data?.category
+    });
+
+    useEffect(() => {
+        if(updated){
+            toast.success('Product Updated');
+            setUpdated(false);
+        }
+
+        if (error) {
+            toast.error(error);
+            clearErrors();
+        }
+    }, [error, updated]);
+
+
+    const { name, description, seller, price, stock, category } = product;
+
+    const onChange = (e) => {
+        setProduct({ ...product, [e.target.name]: e.target.value })
+    };
+
     const categories = [
         "Electronics",
         "Cameras",
@@ -9,13 +44,19 @@ const UpdateProduct = () => {
         "Books"
     ];
 
+    const sumbitHandler = (e) => {
+        e.preventDefault();
+
+        updateProduct(product, data?._id);
+    };
+
     return (
         <section className="container max-w-3xl p-6 mx-auto">
             <h1 className="mb-3 text-xl md:text-3xl font-semibold text-black">
                 Update Product
             </h1>
 
-            <form>
+            <form onSubmit={sumbitHandler}>
                 <div className="mb-4">
                     <label className="block mb-1"> Name </label>
                     <input
@@ -23,6 +64,8 @@ const UpdateProduct = () => {
                         className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                         placeholder="Product name"
                         name="name"
+                        value={name}
+                        onChange={onChange}
                         required
                     />
                 </div>
@@ -34,6 +77,8 @@ const UpdateProduct = () => {
                         className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                         placeholder="Product description"
                         name="description"
+                        value={description}
+                        onChange={onChange}
                         required
                     ></textarea>
                 </div>
@@ -48,6 +93,8 @@ const UpdateProduct = () => {
                                     className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                     placeholder="0.00"
                                     name="price"
+                                    value={price}
+                                    onChange={onChange}
                                     required
                                 />
                             </div>
@@ -59,6 +106,8 @@ const UpdateProduct = () => {
                             <select
                                 className="block appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                 name="category"
+                                value={category}
+                                onChange={onChange}
                                 required
                             >
                                 {categories.map((category) => (
@@ -89,6 +138,8 @@ const UpdateProduct = () => {
                             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                             placeholder="Seller or brand"
                             name="seller"
+                            value={seller}
+                            onChange={onChange}
                             required
                         />
                     </div>
@@ -102,6 +153,8 @@ const UpdateProduct = () => {
                                     className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                     placeholder="0"
                                     name="stock"
+                                    value={stock}
+                                    onChange={onChange}
                                     required
                                 />
                             </div>
