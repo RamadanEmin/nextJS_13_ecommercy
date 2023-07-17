@@ -42,6 +42,18 @@ export const ProductProvider = ({ children }) => {
         }
     };
 
+    const deleteProduct = async (id) => {
+        try {
+            const { data } = await axios.delete(`${process.env.API_URL}/api/admin/products/${id}`);
+
+            if (data?.success) {
+                router.replace(`/admin/products`);
+            }
+        } catch (error) {
+            setError(error?.response?.data?.message);
+        }
+    };
+
     const uploadProductImages = async (formData, id) => {
         try {
             setLoading(true);
@@ -78,6 +90,7 @@ export const ProductProvider = ({ children }) => {
                 newProduct,
                 updateProduct,
                 uploadProductImages,
+                deleteProduct,
                 clearErrors
             }}
         >
