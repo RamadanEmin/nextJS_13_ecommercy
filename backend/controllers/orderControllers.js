@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import getRawBody from "raw-body";
 import Order from "../models/order";
 import APIFilters from "../utils/APIFilters";
+import ErrorHandler from "../utils/errorHandler";
 
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
 
@@ -18,6 +19,16 @@ export const getOrders = async (req, res) => {
         resPerPage,
         orders
     });
+};
+
+export const getOrder = async (req, res, next) => {
+    const order = await Order.findById(req.query.id).populate("shippingInfo user");
+
+    if (!order) {
+        return next(new ErrorHandler('No Order found this ID', 404));
+    }
+
+    res.status(200).json({ order });
 };
 
 export const myOrders = async (req, res) => {
