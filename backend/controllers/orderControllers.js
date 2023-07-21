@@ -46,6 +46,23 @@ export const myOrders = async (req, res) => {
     });
 };
 
+export const updateOrder = async (req, res, next) => {
+    let order = await Order.findById(req.query.id);
+
+    if (!order) {
+        return next(new ErrorHandler('No Order found this ID', 404));
+    }
+
+    order = await Order.findByIdAndUpdate(req.query.id, {
+        orderStatus: req.body.orderStatus
+    });
+
+    res.status(200).json({
+        success: true,
+        order
+    });
+};
+
 export const checkoutSession = async (req, res) => {
     const body = req.body;
 
