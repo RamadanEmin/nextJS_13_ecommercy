@@ -63,6 +63,20 @@ export const updateOrder = async (req, res, next) => {
     });
 };
 
+export const deleteOrder = async (req, res, next) => {
+    let order = await Order.findById(req.query.id);
+
+    if (!order) {
+        return next(new ErrorHandler('No Order found this ID', 404));
+    }
+
+    await order.deleteOne();
+
+    res.status(200).json({
+        success: true
+    });
+};
+
 export const checkoutSession = async (req, res) => {
     const body = req.body;
 
