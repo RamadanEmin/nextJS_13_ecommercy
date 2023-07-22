@@ -1,12 +1,33 @@
 'use client';
 
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import OrderContext from "@/context/OrderContext";
+import { toast } from "react-toastify";
 
 const UpdateOrder = ({ order }) => {
+    const { updateOrder, error, clearErrors, updated, setUpdated } = useContext(OrderContext);
+
     const [orderStatus, setOrderStatus] = useState(order?.orderStatus);
 
-    const submitHandler = () => {};
+    useEffect(() => {
+        if (updated) {
+            setUpdated(false);
+            toast.success('Order Updated');
+        }
+
+        if (error) {
+            toast.success(error);
+            clearErrors();
+        }
+    }, [updated, error]);
+
+    const submitHandler = () => {
+        const orderData = { orderStatus };
+
+        updateOrder(order?._id, orderData);
+    };
+
 
     return (
         <article className="p-3 lg:p-5 mb-5 bg-white border border-blue-600 rounded-md">
