@@ -67,3 +67,16 @@ export const getUsers = async (req, res) => {
         users
     });
 };
+
+export const getUser = async (req, res, next) => {
+    let user = await User.findById(req.query.id);
+
+    if (!user) {
+        return next(new ErrorHandler('No User found this ID', 404));
+    }
+
+    res.status(200).json({
+        success: true,
+        user
+    });
+};
