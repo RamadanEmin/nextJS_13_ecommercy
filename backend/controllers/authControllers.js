@@ -1,4 +1,9 @@
 import User from "../models/user";
+import fs from "fs";
+import { uploads } from "../utils/cloudinary";
+import ErrorHandler from "../utils/errorHandler";
+import bcrypt from "bcryptjs";
+import APIFilters from "../utils/APIFilters";
 
 export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
@@ -46,4 +51,19 @@ export const updatePassword = async (req, res, next) => {
     await user.save();
 
     res.status(200).json({ success: true });
+};
+
+export const getUsers = async (req, res) => {
+    const resPerPage = 5;
+    const usersCount = await User.countDocuments();
+
+    const apiFilters = new APIFilters(User.find(), req.query).pagination(resPerPage);
+
+    const users = await apiFilters.query;
+
+    res.status(200).json({
+        usersCount,
+        resPerPage,
+        users
+    });
 };
