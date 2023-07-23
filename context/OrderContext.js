@@ -27,6 +27,18 @@ export const OrderProvider = ({ children }) => {
         }
     };
 
+    const deleteOrder = async (id) => {
+        try {
+            const { data } = await axios.delete(`${process.env.API_URL}/api/admin/orders/${id}`);
+
+            if (data?.success) {
+                router.replace(`/admin/orders`);
+            }
+        } catch (error) {
+            setError(error?.response?.data?.message);
+        }
+    };
+
     const clearErrors = () => {
         setError(null);
     };
@@ -39,6 +51,7 @@ export const OrderProvider = ({ children }) => {
                 clearErrors,
                 setUpdated,
                 updateOrder,
+                deleteOrder,
             }}
         >
             {children}
