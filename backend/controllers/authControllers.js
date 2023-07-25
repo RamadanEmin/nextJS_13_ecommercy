@@ -80,3 +80,18 @@ export const getUser = async (req, res, next) => {
         user
     });
 };
+
+export const updateUser = async (req, res, next) => {
+    let user = await User.findById(req.query.id);
+
+    if (!user) {
+        return next(new ErrorHandler('No User found this ID', 404));
+    }
+
+    user = await User.findByIdAndUpdate(req.query.id, req.body.userData);
+
+    res.status(200).json({
+        success: true,
+        user
+    });
+};
