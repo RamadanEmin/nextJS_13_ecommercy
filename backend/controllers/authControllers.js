@@ -13,7 +13,6 @@ export const registerUser = async (req, res) => {
         email,
         password
     });
-
     res.status(201).json({ user });
 };
 
@@ -93,5 +92,19 @@ export const updateUser = async (req, res, next) => {
     res.status(200).json({
         success: true,
         user
+    });
+};
+
+export const deleteUser = async (req, res, next) => {
+    let user = await User.findById(req.query.id);
+
+    if (!user) {
+        return next(new ErrorHandler('No User found this ID', 404));
+    }
+
+    await user.deleteOne();
+
+    res.status(200).json({
+        success: true
     });
 };
