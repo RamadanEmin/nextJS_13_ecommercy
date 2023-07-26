@@ -101,6 +101,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const deleteUser = async (id) => {
+        try {
+            const { data } = await axios.delete(`${process.env.API_URL}/api/admin/users/${id}`
+            );
+
+            if (data?.success) {
+                router.replace(`/admin/users`);
+            }
+        } catch (error) {
+            setError(error?.response?.data?.message);
+        }
+    };
+
     const addNewAddress = async (address) => {
         try {
             const { data } = await axios.post(`${process.env.API_URL}/api/address`, address);
@@ -156,6 +169,7 @@ export const AuthProvider = ({ children }) => {
                 updateProfile,
                 updatePassword,
                 updateUser,
+                deleteUser,
                 addNewAddress,
                 updateAddress,
                 deleteAddress,
