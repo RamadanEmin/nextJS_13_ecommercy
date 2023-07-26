@@ -1,8 +1,8 @@
 'use client';
 
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import { createContext, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const AuthContext = createContext();
 
@@ -84,6 +84,23 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateUser = async (id,userData) => {
+        try {
+            const { data } = await axios.put(`${process.env.API_URL}/api/admin/users/${id}`,
+                {
+                    userData
+                }
+            );
+
+            if (data?.success) {
+                setUpdated(true);
+                router.replace(`/admin/users/${id}`);
+            }
+        } catch (error) {
+            setError(error?.response?.data?.message);
+        }
+    };
+
     const addNewAddress = async (address) => {
         try {
             const { data } = await axios.post(`${process.env.API_URL}/api/address`, address);
@@ -138,6 +155,7 @@ export const AuthProvider = ({ children }) => {
                 registerUser,
                 updateProfile,
                 updatePassword,
+                updateUser,
                 addNewAddress,
                 updateAddress,
                 deleteAddress,
