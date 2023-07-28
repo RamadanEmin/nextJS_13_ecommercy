@@ -1,4 +1,35 @@
-const UpdateUser = () => {
+'use client';
+
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import AuthContext from "@/context/AuthContext";
+
+const UpdateUser = ({ user }) => {
+    const { error, clearErrors, updateUser, updated, setUpdated } = useContext(AuthContext);
+
+    const [name, setName] = useState(user?.name);
+    const [email, setEmail] = useState(user?.email);
+    const [role, setRole] = useState(user?.role);
+
+    useEffect(() => {
+        if (updated) {
+            setUpdated(false);
+            toast.success('User Updated');
+        }
+
+        if (error) {
+            toast.error(error);
+            clearErrors();
+        }
+    }, [updated, error]);
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+
+        const userData = { name, email, role };
+
+        updateUser(user?._id, userData);
+    };
 
     return (
         <>
@@ -6,7 +37,7 @@ const UpdateUser = () => {
                 style={{ maxWidth: "480px" }}
                 className="mt-1 mb-20 p-4 md:p-7 mx-auto rounded bg-white"
             >
-                <form>
+                <form onSubmit={submitHandler}>
                     <h2 className="mb-5 text-2xl font-semibold">Update User</h2>
 
                     <div className="mb-4">
@@ -15,6 +46,8 @@ const UpdateUser = () => {
                             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                             type="text"
                             placeholder="Type your name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             required
                         />
                     </div>
@@ -25,6 +58,8 @@ const UpdateUser = () => {
                             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                             type="text"
                             placeholder="Type your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
@@ -35,8 +70,15 @@ const UpdateUser = () => {
                             <select
                                 className="block appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
                                 name="category"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
                                 required
                             >
+                                {["user", "admin"].map((role) => (
+                                    <option key={role} value={role}>
+                                        {role}
+                                    </option>
+                                ))}
                             </select>
                             <i className="absolute inset-y-0 right-0 p-2 text-gray-400">
                                 <svg
