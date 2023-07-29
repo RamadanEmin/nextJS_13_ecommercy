@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useContext } from "react";
+import { useRef, useContext, useEffect } from "react";
 import StarRatings from "react-star-ratings";
 import BreadCrumbs from "../layouts/BreadCrumbs";
 import CartContext from "@/context/CartContext";
+import NewReview from "../review/NewReview";
 
 const ProductDetails = ({ product }) => {
     const { addItemToCart } = useContext(CartContext);
@@ -58,6 +59,7 @@ const ProductDetails = ({ product }) => {
                             <div className="space-x-2 overflow-auto text-center whitespace-nowrap">
                                 {product?.images?.map((img) => (
                                     <a
+                                        key={img._id}
                                         className="inline-block border border-gray-200 p-1 rounded-md hover:border-blue-500 cursor-pointer"
                                         onClick={() => setImgPreview(img?.url)}
                                     >
@@ -86,7 +88,7 @@ const ProductDetails = ({ product }) => {
                                         name="rating"
                                     />
                                 </div>
-                                <span className="text-yellow-500">{product?.ratings}</span>
+                                <span className="text-yellow-500">{product?.ratings} ({product?.reviews?.length})</span>
 
                                 <svg
                                     width="6px"
@@ -141,6 +143,7 @@ const ProductDetails = ({ product }) => {
                         </main>
                     </div>
 
+                   <NewReview product={product} />
                     <hr />
 
                     <div className="font-semibold">

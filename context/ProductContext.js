@@ -54,6 +54,20 @@ export const ProductProvider = ({ children }) => {
         }
     };
 
+    const postReview = async (reviewData) => {
+        try {
+            const { data } = await axios.put(`${process.env.API_URL}/api/products/review`,
+                reviewData
+            );
+
+            if (data?.success) {
+                router.replace(`/product/${reviewData?.productId}`);
+            }
+        } catch (error) {
+            setError(error?.response?.data?.message);
+        }
+    };
+
     const uploadProductImages = async (formData, id) => {
         try {
             setLoading(true);
@@ -91,6 +105,7 @@ export const ProductProvider = ({ children }) => {
                 updateProduct,
                 uploadProductImages,
                 deleteProduct,
+                postReview,
                 clearErrors
             }}
         >
