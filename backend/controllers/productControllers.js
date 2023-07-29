@@ -1,5 +1,8 @@
+import fs from "fs";
 import Product from "../models/product";
 import APIFilters from "../utils/APIFilters";
+import { cloudinary, uploads } from "../utils/cloudinary";
+import ErrorHandler from "../utils/errorHandler";
 
 export const newProduct = async (req, res, next) => {
     req.body.user = req.user._id;
@@ -14,7 +17,7 @@ export const getProducts = async (req, res, next) => {
     const resPerPage = 5;
     const productCount = await Product.countDocuments();
 
-    const apiFilters = new APIFilters(Product.find(), req.query).search().filter();
+    const apiFilters = new APIFilters(Product.find().sort({ createdAt: -1 }), req.query).search().filter();
 
     let products = await apiFilters.query;
     const filteredProductsCount = products.length;
@@ -31,12 +34,10 @@ export const getProducts = async (req, res, next) => {
 }
 
 export const getProduct = async (req, res, next) => {
-    const product = await Product.findById(req.query.id);
+    const product = await Product.findById(req.query.id).populate("user reviews.user");
 
     if (!product) {
-        res.status(404).json({
-            error: "Product not found."
-        });
+        return next(new ErrorHandler("Product not found.", 404));
     }
 
     res.status(200).json({
@@ -102,5 +103,42 @@ export const deleteProduct = async (req, res, next) => {
 
     res.status(200).json({
         success: true
+    });
+};
+
+export const createProductReview = async (req, res, next) => {
+    const { rating, comment, productId } = req.body;
+
+    const review = {
+        rating: Number(rating),
+        comment,
+        user: req?.user?._id
+    };
+
+    let product = await Product.findById(productId);
+
+    if (!product) {
+        return next(new ErrorHandler("Product not found.", 404));
+    }
+
+    const isReviewed = product?.reviews?.find((r) => r.user.toString() === req.user._id.toString());
+
+    if (isReviewed) {
+        product?.reviews.forEach((review) => {
+            if (review.user.toString() === req.user._id.toString()) {
+                review.comment = comment;
+                review.rating = rating;
+            }
+        });
+    } else {
+        product?.reviews.push(review);
+    }
+
+    product.ratings = product?.reviews?.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+
+    await product?.save();
+
+    res.status(200).json({
+        success: true,
     });
 };
