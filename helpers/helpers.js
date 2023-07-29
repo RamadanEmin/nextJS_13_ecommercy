@@ -11,3 +11,15 @@ export const getPriceQueryParams = (queryParams, key, value) => {
 
     return queryParams;
 }
+
+export const getUserReview = (reviews, userId) => {
+    let userReview = null;
+
+    reviews.forEach((review) => {
+        if(review?.user?._id === userId){
+            userReview = review;
+        }
+    });
+
+    return userReview;
+};
