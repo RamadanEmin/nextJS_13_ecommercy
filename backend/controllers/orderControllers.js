@@ -33,9 +33,9 @@ export const getOrder = async (req, res, next) => {
 
 export const myOrders = async (req, res) => {
     const resPerPage = 2;
-    const ordersCount = await Order.countDocuments();
+    const ordersCount = await Order.countDocuments({ user: req.user._id } );
 
-    const apiFilters = new APIFilters(Order.find(), req.query).pagination(resPerPage);
+    const apiFilters = new APIFilters(Order.find().sort({ createAt: -1 }), req.query).pagination(resPerPage);
 
     const orders = await apiFilters.query.find({ user: req.user._id }).populate("shippingInfo user");
 
@@ -74,6 +74,23 @@ export const deleteOrder = async (req, res, next) => {
 
     res.status(200).json({
         success: true
+    });
+};
+
+export const canReview = async (req, res) => {
+    const productId = req.query.productId;
+
+    const order = await Order.find({
+        user: req?.user?._id,
+        "orderItems.product": productId
+    });
+
+    let canReview = order?.length >= 1
+        ? true
+        : false;
+
+    res.status(200).json({
+        canReview
     });
 };
 
