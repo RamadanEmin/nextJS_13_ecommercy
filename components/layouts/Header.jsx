@@ -41,18 +41,6 @@ const Header = () => {
                     <Search />
 
                     <div className="flex items-center space-x-2 ml-auto">
-                        <Link
-                            href="/cart"
-                            className="px-3 py-2 inline-block text-center text-gray-700 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100 hover:border-gray-300"
-                        >
-                            <FontAwesomeIcon
-                                icon={faCartShopping}
-                                className="text-gray-400 w-5 fa fa-shopping-cart"
-                            />
-                            <span className="hidden lg:inline ml-1">
-                                Cart (<b>{cartItems?.length || 0}</b>)
-                            </span>
-                        </Link>
                         {!user ? (
                             <Link
                                 href="/login"
@@ -62,25 +50,40 @@ const Header = () => {
                                 <span className="hidden lg:inline ml-1">Sign in</span>
                             </Link>
                         ) : (
-                            <Link href="/me">
-                                <div className="flex items-center mb-4 space-x-3 mt-4 cursor-pointer">
-                                    <Image
-                                        className="w-10 h-10 rounded-full"
-                                        src={user.image ? user.image.url : "/images/profil.png"}
-                                        height="100"
-                                        width="100"
-                                        alt="profil-image"
+                            <>
+                                <Link
+                                    href="/cart"
+                                    className="px-3 py-2 inline-block text-center text-gray-700 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100 hover:border-gray-300"
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faCartShopping}
+                                        className="text-gray-400 w-5 fa fa-shopping-cart"
                                     />
-                                    <div className="space-y-1 font-medium">
-                                        <p>
-                                            {user.name}
-                                            <time className="block text-sm text-gray-500 dark:text-gray-400">
-                                                {user.email}
-                                            </time>
-                                        </p>
+                                    <span className="hidden lg:inline ml-1">
+                                        Cart (<b>{cartItems?.length || 0}</b>)
+                                    </span>
+                                </Link>
+
+                                <Link href="/me">
+                                    <div className="flex items-center mb-4 space-x-3 mt-4 cursor-pointer">
+                                        <Image
+                                            className="w-10 h-10 rounded-full"
+                                            src={user.image ? user.image.url : "/images/profil.png"}
+                                            height="100"
+                                            width="100"
+                                            alt="profil-image"
+                                        />
+                                        <div className="space-y-1 font-medium">
+                                            <p>
+                                                {user.name}
+                                                <time className="block text-sm text-gray-500 dark:text-gray-400">
+                                                    {user.email}
+                                                </time>
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
+                                </Link>
+                            </>
                         )}
                     </div>
 
